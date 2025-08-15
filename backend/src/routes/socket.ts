@@ -2,8 +2,8 @@ import { Socket, Server as SocketIOServer } from "socket.io";
 import { rooms } from "../utils/room";
 import { checkWinner } from "../utils/checkWinner";
 
-const playerRooms = new Map<string, string>(); // userId → roomId
-const socketToUserId = new Map<string, string>(); // socket.id → userId
+const playerRooms = new Map<string, string>();
+const socketToUserId = new Map<string, string>();
 
 export function startGlobalMoveCleanup(io: SocketIOServer) {
   setInterval(() => {
