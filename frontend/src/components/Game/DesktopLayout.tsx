@@ -84,11 +84,9 @@ const DesktopLayout: React.FC<DesktopLayoutProps> = ({
         <InfiniteBoard
           board={gameState.board || new Map()}
           onMove={makeMove}
-          connectedPlayers={connectedPlayers}
           currentPlayer={gameState.currentPlayer || "X"}
           isGameActive={gameState.isGameActive || true}
           winningPositions={gameState.winningPositions || null}
-          mode={mode}
         />
       </div>
     </div>

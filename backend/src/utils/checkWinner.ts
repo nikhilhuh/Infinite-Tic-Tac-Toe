@@ -1,9 +1,9 @@
-import { Move, Player, Position } from "../types/game";
+import { Move, PlayerSymbol, Position } from "../types/game";
 
 export const checkWinner = (
   board: Map<string, Move>,
   lastMove: Position
-): { player: Player; winningPositions: Position[] } | null => {
+): { player: PlayerSymbol; winningPositions: Position[] } | null => {
   const { x, y } = lastMove;
   const player = board.get(`${x},${y}`)?.player;
   if (!player) return null;

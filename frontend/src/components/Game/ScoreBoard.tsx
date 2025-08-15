@@ -89,7 +89,16 @@ export default function ScoreBoard({
                   {currentPlayer === "X" ? "× Player" : "○ Player"}
                 </div>
                 <div className="text-xs sm:text-sm text-muted-foreground">
-                  Your turn
+                  {mode === "online"
+                    ? (() => {
+                        const me = connectedPlayers.find(
+                          (p) => p.name === playerName
+                        );
+                        return me?.symbol === currentPlayer
+                          ? "Your turn"
+                          : "Opponent's turn";
+                      })()
+                    : "Your turn"}
                 </div>
               </div>
             </motion.div>
@@ -195,7 +204,9 @@ export default function ScoreBoard({
                 key={player.id}
                 className={`
                   flex items-center justify-between gap-2 p-2 rounded
-                  ${player.name === playerName ? "bg-primary/10" : "bg-muted/50"}
+                  ${
+                    player.name === playerName ? "bg-primary/10" : "bg-muted/50"
+                  }
                 `}
               >
                 <div className="flex gap-2 items-center">
@@ -204,7 +215,11 @@ export default function ScoreBoard({
                     {player.name} {player.name === playerName && "(You)"}
                   </span>
                 </div>
-                <span className={`text-xs font-bold sm:text-sm ${player.symbol === "X" ? "text-game-red" : "text-game-blue"}`}>
+                <span
+                  className={`text-xs font-bold sm:text-sm ${
+                    player.symbol === "X" ? "text-game-red" : "text-game-blue"
+                  }`}
+                >
                   {player.symbol}
                 </span>
               </div>

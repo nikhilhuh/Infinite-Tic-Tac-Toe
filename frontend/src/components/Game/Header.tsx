@@ -7,13 +7,11 @@ import { useNavigate } from "react-router-dom";
 interface HeaderProps {
   mode: "local" | "online";
   currentRoomId: string | null;
-  isConnected: boolean;
 }
 
 const Header: React.FC<HeaderProps> = ({
   mode,
   currentRoomId,
-  isConnected,
 }) => {
   const navigate = useNavigate();
   return (
@@ -37,7 +35,7 @@ const Header: React.FC<HeaderProps> = ({
           <div className="text-sm text-muted-foreground">
             {mode === "local"
               ? "Local Game"
-              : isConnected
+              : currentRoomId
               ? `Room: ${currentRoomId}`
               : "Connecting..."}
           </div>

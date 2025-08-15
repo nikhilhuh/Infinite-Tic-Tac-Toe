@@ -35,7 +35,6 @@ export default function Game() {
 
   const {
     socket,
-    isConnected,
     connectedPlayers,
     joinRoom,
     makeMove: makeOnlineMove,
@@ -47,18 +46,17 @@ export default function Game() {
     if (mode === "online" && currentRoomId && playerName && !hasRoom.current) {
       joinRoom(currentRoomId, playerName);
       hasRoom.current = true;
-      sessionStorage.setItem("roomId", currentRoomId);
     }
 
     // Cleanup: leave room only if actually leaving the game route and also remove saved scores for local game
     return () => {
-      sessionStorage.removeItem(`${mode}-scores`);
-      sessionStorage.removeItem("roomId");
       const stillOnGamePage = window.location.pathname.includes("/game");
       if (!stillOnGamePage) {
         socket.emit("leaveRoom", { roomId: currentRoomId, playerName });
         sessionStorage.removeItem("roomId");
         hasRoom.current = false;
+        sessionStorage.removeItem(`${mode}-scores`);
+        sessionStorage.removeItem("roomId");
       }
     };
   }, [mode, currentRoomId, playerName, joinRoom]);
@@ -101,7 +99,6 @@ export default function Game() {
       <Header
         mode={mode}
         currentRoomId={currentRoomId}
-        isConnected={isConnected}
       />
 
       <div className="max-w-7xl mx-auto p-2 lg:p-4">

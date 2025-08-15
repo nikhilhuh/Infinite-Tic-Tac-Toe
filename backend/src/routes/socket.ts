@@ -144,11 +144,14 @@ export function handleSocketConnection(socket: Socket, io: SocketIOServer) {
       const winnerResult = checkWinner(room.board, move.position);
       if (winnerResult) {
         const { player: winnerPlayer, winningPositions } = winnerResult;
+        console.log("Winner symbol:", winnerPlayer);
+        console.log("Scores before:", room.scores);
 
-        room.scores[winnerPlayer.symbol]++;
-        room.winner = winnerPlayer.symbol;
+        room.scores[winnerPlayer]++;
+        room.winner = winnerPlayer;
         room.winningPositions = winningPositions;
         room.isGameActive = false;
+        console.log("Scores after:", room.scores);
 
         // Broadcast win
         io.to(roomId).emit("game-state-update", {

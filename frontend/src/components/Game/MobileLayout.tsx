@@ -73,7 +73,6 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
         currentPlayer={gameState.currentPlayer || "X"}
         isGameActive={gameState.isGameActive || true}
         winningPositions={gameState.winningPositions || null}
-        mode={mode}
       />
 
       <ScoreBoard

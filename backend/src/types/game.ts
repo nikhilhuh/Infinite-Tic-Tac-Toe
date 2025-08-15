@@ -1,7 +1,9 @@
+export type PlayerSymbol = "X" | "O";
+
 export interface Player {
   id: string;
   name: string;
-  symbol: "X" | "O";
+  symbol: PlayerSymbol;
 }
 export interface Position {
   x: number;
@@ -9,7 +11,7 @@ export interface Position {
 } 
 
 export interface Move {
-  player: Player;
+  player: PlayerSymbol;
   timestamp: number;
   position: Position;
 }

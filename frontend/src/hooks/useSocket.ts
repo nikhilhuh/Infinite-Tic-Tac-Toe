@@ -7,7 +7,6 @@ const userId = getOrCreateUserId();
 
 interface UseSocketReturn {
   socket: typeof socket;
-  isConnected: boolean;
   connectedPlayers: OnlinePlayer[];
   joinRoom: (roomId: string, playerName: string) => void;
   makeMove: (roomId: string, x: number, y: number) => void;
@@ -16,7 +15,6 @@ interface UseSocketReturn {
 }
 
 export function useSocket(): UseSocketReturn {
-  const [isConnected, setIsConnected] = useState(socket.connected);
   const [connectedPlayers, setConnectedPlayers] = useState<OnlinePlayer[]>([]);
   const [gameState, setGameState] = useState<GameState | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -24,13 +22,11 @@ export function useSocket(): UseSocketReturn {
   useEffect(() => {
     // Handle connect/disconnect
     socket.on("connect", () => {
-      setIsConnected(true);
       setError(null);
     });
 
     socket.on("disconnect", () => {
       setError(null);
-      setIsConnected(false);
     });
 
     // When a player joins or reconnects
@@ -119,7 +115,6 @@ export function useSocket(): UseSocketReturn {
 
   return {
     socket,
-    isConnected,
     connectedPlayers,
     joinRoom,
     makeMove,
