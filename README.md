@@ -122,8 +122,6 @@ The backend will run at: http://localhost:3001
 
 ---
 
----
-
 ## 🌟 Support & Connect
 
 If you like this project, consider giving it a **star** ⭐ on GitHub — it really helps!  
