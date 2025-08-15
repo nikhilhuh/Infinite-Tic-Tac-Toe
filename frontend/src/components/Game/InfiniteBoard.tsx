@@ -26,12 +26,15 @@ export default function InfiniteBoard({
   // Handle responsive grid sizes
   useEffect(() => {
     const updateGridSize = () => {
-      if (window.innerWidth >= 768) {
+      if (window.innerWidth >= 1200) {
+        setGridCols(15);
+        setGridRows(15);
+      } else if (window.innerWidth >= 768) {
         setGridCols(15);
         setGridRows(12);
       } else {
         setGridCols(10);
-        setGridRows(10);
+        setGridRows(14);
       }
     };
     updateGridSize();
@@ -60,7 +63,7 @@ export default function InfiniteBoard({
       transition={{ duration: 0.5 }}
     >
       {/* Header */}
-      <div className="mb-3 sm:mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+      <div className="mb-3 sm:mb-4 flex flex-wrap flex-row items-center justify-between gap-2">
         <h2 className="text-lg sm:text-xl font-bold">Game Board</h2>
         <div className="text-xs sm:text-sm text-muted-foreground">
           Current:{" "}
@@ -77,7 +80,7 @@ export default function InfiniteBoard({
       {/* Board */}
       <div
         ref={containerRef}
-        className={`relative overflow-hidden bg-game-bg/50 rounded-lg w-full h-[60vh] md:h-[75vh]`}
+        className={`relative overflow-hidden bg-game-bg/50 rounded-lg w-full h-[60vh] lg:h-[70vh]`}
       >
         <div
           className="absolute inset-0 grid"
@@ -100,7 +103,6 @@ export default function InfiniteBoard({
                 key={position}
                 onMouseEnter={() => handleCellHover(x, y, true)}
                 onMouseLeave={() => handleCellHover(x, y, false)}
-                className="flex justify-center items-center border border-border"
               >
                 <Cell
                   x={x}

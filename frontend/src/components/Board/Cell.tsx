@@ -46,14 +46,13 @@ export const Cell: React.FC<CellProps> = ({
 
   const opacity = move
     ? winningPositions
-      ? 1 // Full opacity if part of winning state
+      ? 1
       : Math.max(0.3, timeLeft / 20)
     : 1;
 
   return (
     <motion.div
-      className={`
-   md:w-10 md:h-10 border border-game-grid/30 flex items-center justify-center cursor-pointer
+      className={`h-full w-full border border-border flex items-center justify-center cursor-pointer
     relative transition-colors duration-200
     ${isWinningCell ? "bg-green-200" : ""}
     ${
