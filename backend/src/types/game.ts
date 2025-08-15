@@ -9,9 +9,18 @@ export interface Position {
 } 
 
 export interface Move {
-  player: "X" | "O";
+  player: Player;
   timestamp: number;
   position: Position;
+}
+
+export interface GameState {
+  board: Map<string, Move>;
+  currentPlayer: Player;
+  scores: { X: number; O: number };
+  isGameActive: boolean;
+  winner: Player | null;
+  winningPositions: Position[] | null;
 }
 
 export interface Room {

@@ -1,6 +1,5 @@
 import { Socket, Server as SocketIOServer } from "socket.io";
 import { rooms } from "../utils/room";
-import { Move } from "../types/game";
 import { checkWinner } from "../utils/checkWinner";
 
 const playerRooms = new Map<string, string>(); // userId → roomId
@@ -146,8 +145,8 @@ export function handleSocketConnection(socket: Socket, io: SocketIOServer) {
       if (winnerResult) {
         const { player: winnerPlayer, winningPositions } = winnerResult;
 
-        room.scores[winnerPlayer]++;
-        room.winner = winnerPlayer;
+        room.scores[winnerPlayer.symbol]++;
+        room.winner = winnerPlayer.symbol;
         room.winningPositions = winningPositions;
         room.isGameActive = false;
 
