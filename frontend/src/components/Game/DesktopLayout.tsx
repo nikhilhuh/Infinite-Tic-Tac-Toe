@@ -11,7 +11,6 @@ interface DesktopLayoutProps {
   playerName: string;
   connectedPlayers: OnlinePlayer[];
   currentRoomId: string | null;
-  isCreating: boolean;
   makeMove: (x: number, y: number) => void;
   error: string | null;
 }
@@ -22,9 +21,8 @@ const DesktopLayout: React.FC<DesktopLayoutProps> = ({
   playerName,
   connectedPlayers,
   currentRoomId,
-  isCreating,
   makeMove,
-  error
+  error,
 }) => {
   const [copied, setCopied] = React.useState<boolean>(false);
 
@@ -42,8 +40,10 @@ const DesktopLayout: React.FC<DesktopLayoutProps> = ({
       </div>
 
       <div className="lg:col-span-3 space-y-4">
-        {error && <p className="text-red-400 text-center text-sm p-2">{error}</p>}
-        {mode === "online" && currentRoomId && isCreating && connectedPlayers.length < 2  && (
+        {error && (
+          <p className="text-red-400 text-center text-sm p-2">{error}</p>
+        )}
+        {mode === "online" && currentRoomId && connectedPlayers.length < 2 && (
           <motion.div
             className="bg-game-blue/10 border border-game-blue/30 rounded-lg p-4"
             initial={{ opacity: 0, y: -20 }}
@@ -65,16 +65,18 @@ const DesktopLayout: React.FC<DesktopLayoutProps> = ({
                   size="sm"
                   variant="outline"
                   onClick={() =>
-                    navigator.clipboard.writeText(currentRoomId || "").then(()=> {
-                      setCopied(true);
-                      setTimeout(() => {
-                        setCopied(false);
-                      }, 2000);
-                    })
+                    navigator.clipboard
+                      .writeText(currentRoomId || "")
+                      .then(() => {
+                        setCopied(true);
+                        setTimeout(() => {
+                          setCopied(false);
+                        }, 2000);
+                      })
                   }
                   className="mt-1"
                 >
-                  {copied? "✅Copied" : "Copy Room Id"}
+                  {copied ? "✅Copied" : "Copy Room Id"}
                 </Button>
               </div>
             </div>
@@ -87,6 +89,9 @@ const DesktopLayout: React.FC<DesktopLayoutProps> = ({
           currentPlayer={gameState.currentPlayer || "X"}
           isGameActive={gameState.isGameActive || true}
           winningPositions={gameState.winningPositions || null}
+          mode={mode}
+          connectedPlayers={connectedPlayers}
+          playerName={playerName}
         />
       </div>
     </div>

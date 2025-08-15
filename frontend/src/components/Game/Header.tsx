@@ -16,7 +16,7 @@ const Header: React.FC<HeaderProps> = ({
   const navigate = useNavigate();
   return (
     <motion.div
-      className="bg-background/80 backdrop-blur-sm border-b border-border px-4 py-2 h-[10svh]"
+      className="bg-background/80 backdrop-blur-sm border-b border-border px-4 py-2"
       initial={{ y: -50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5 }}

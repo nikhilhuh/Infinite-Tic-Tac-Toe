@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Move, Player, Position } from "@/types/game";
+import { Move, OnlinePlayer, Player, Position } from "@/types/game";
 import { Cell } from "../Board/Cell";
 
 interface InfiniteBoardProps {
@@ -9,6 +9,9 @@ interface InfiniteBoardProps {
   currentPlayer: Player;
   isGameActive: boolean;
   winningPositions: Position[] | null;
+  mode: "online" | "local";
+  connectedPlayers: OnlinePlayer[];
+  playerName: string;
 }
 
 export default function InfiniteBoard({
@@ -17,6 +20,9 @@ export default function InfiniteBoard({
   currentPlayer,
   isGameActive,
   winningPositions,
+  mode,
+  connectedPlayers,
+  playerName
 }: InfiniteBoardProps) {
   const [hoveredCell, setHoveredCell] = useState<string | null>(null);
   const [gridCols, setGridCols] = useState(10);
@@ -29,7 +35,7 @@ export default function InfiniteBoard({
       if (window.innerWidth >= 1200) {
         setGridCols(15);
         setGridRows(15);
-      } else if (window.innerWidth >= 768) {
+      } else if (window.innerWidth >= 600) {
         setGridCols(15);
         setGridRows(12);
       } else {
@@ -113,6 +119,9 @@ export default function InfiniteBoard({
                   currentPlayer={currentPlayer}
                   isGameActive={isGameActive}
                   winningPositions={winningPositions}
+                  mode={mode}
+                  connectedPlayers={connectedPlayers}
+                  playerName={playerName}
                 />
               </div>
             );

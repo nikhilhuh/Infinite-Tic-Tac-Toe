@@ -3,7 +3,7 @@ import express from "express";
 import cors from "cors";
 import { createServer as createHttpServer } from "http";
 import { Server as SocketIOServer } from "socket.io";
-import { handleSocketConnection, startGlobalMoveCleanup } from "./routes/socket.js";
+import { handleSocketConnection, startGlobalMoveCleanup } from "./socket/socket.js";
 import { mainRouter } from "./routes/mainRouter.js";
 
 // 👇 Exported function you can import elsewhere

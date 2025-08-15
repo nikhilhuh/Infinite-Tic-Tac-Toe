@@ -11,7 +11,6 @@ interface MobileLayoutProps {
   playerName: string;
   connectedPlayers: OnlinePlayer[];
   currentRoomId: string | null;
-  isCreating: boolean;
   makeMove: (x: number, y: number) => void;
   error: string | null;
 }
@@ -22,7 +21,6 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
   playerName,
   connectedPlayers,
   currentRoomId,
-  isCreating,
   makeMove,
   error
 }) => {
@@ -31,7 +29,7 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
   return (
     <div className="lg:hidden space-y-4">
       {error && <p className="text-red-400 text-center text-xs p-2">{error}</p>}
-      {mode === "online" && currentRoomId && isCreating && connectedPlayers.length < 2 && (
+      {mode === "online" && currentRoomId && connectedPlayers.length < 2 && (
         <motion.div
           className={`bg-game-blue/10 border border-game-blue/30 rounded-lg p-2 ${
             connectedPlayers.length === 2 ? "hidden" : "block"
@@ -73,6 +71,9 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
         currentPlayer={gameState.currentPlayer || "X"}
         isGameActive={gameState.isGameActive || true}
         winningPositions={gameState.winningPositions || null}
+        mode={mode}
+        connectedPlayers={connectedPlayers}
+        playerName={playerName}
       />
 
       <ScoreBoard

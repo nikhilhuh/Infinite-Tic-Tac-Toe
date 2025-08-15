@@ -31,7 +31,9 @@ export const OnlineModal: React.FC<{
         sessionStorage.setItem("roomId", response.roomId);
         onClose();
         navigate(
-          `/game?mode=online&name=${encodeURIComponent(name)}&create=true`
+          `/game?mode=online&name=${encodeURIComponent(
+            name
+          )}&room=${encodeURIComponent(response.roomId)}`
         );
       } else {
         setError(response.message);

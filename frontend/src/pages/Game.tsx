@@ -17,7 +17,6 @@ export default function Game() {
     const saved = sessionStorage.getItem("roomId");
     return saved || roomId;
   });
-  const isCreating = searchParams.get("create") === "true";
   const hasRoom = useRef(false);
 
   const scores = JSON.parse(
@@ -43,23 +42,24 @@ export default function Game() {
   } = useSocketContext();
 
   useEffect(() => {
+    window.scrollTo(0,0);
+    
     if (mode === "online" && currentRoomId && playerName && !hasRoom.current) {
       joinRoom(currentRoomId, playerName);
       hasRoom.current = true;
     }
 
-    // Cleanup: leave room only if actually leaving the game route and also remove saved scores for local game
     return () => {
+      // Normal SPA route change cleanup
       const stillOnGamePage = window.location.pathname.includes("/game");
       if (!stillOnGamePage) {
         socket.emit("leaveRoom", { roomId: currentRoomId, playerName });
         sessionStorage.removeItem("roomId");
         hasRoom.current = false;
         sessionStorage.removeItem(`${mode}-scores`);
-        sessionStorage.removeItem("roomId");
       }
     };
-  }, [mode, currentRoomId, playerName, joinRoom]);
+  }, [mode, currentRoomId, playerName, joinRoom, socket]);
 
   // ✅ Sync onlineGameState into local state when in online mode
   useEffect(() => {
@@ -90,16 +90,13 @@ export default function Game() {
     }
   }, [gameState.scores, mode]);
 
-  if (mode === "online" && !isCreating && !roomId) {
+  if (mode === "online" && !roomId) {
     return <Invalid />;
   }
 
   return (
     <div className="min-h-screen bg-game-bg">
-      <Header
-        mode={mode}
-        currentRoomId={currentRoomId}
-      />
+      <Header mode={mode} currentRoomId={currentRoomId} />
 
       <div className="max-w-7xl mx-auto p-2 lg:p-4">
         <MobileLayout
@@ -108,7 +105,6 @@ export default function Game() {
           playerName={playerName}
           connectedPlayers={connectedPlayers}
           currentRoomId={currentRoomId}
-          isCreating={isCreating}
           makeMove={makeMove}
           error={error}
         />
@@ -119,7 +115,6 @@ export default function Game() {
           playerName={playerName}
           connectedPlayers={connectedPlayers}
           currentRoomId={currentRoomId}
-          isCreating={isCreating}
           makeMove={makeMove}
           error={error}
         />

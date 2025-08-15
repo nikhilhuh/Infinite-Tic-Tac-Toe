@@ -1,4 +1,4 @@
-import { Move, Player, Position } from "@/types/game";
+import { Move, OnlinePlayer, Player, Position } from "@/types/game";
 import React, { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -11,6 +11,9 @@ interface CellProps {
   currentPlayer: Player;
   isGameActive: boolean;
   winningPositions: Position[] | null;
+  mode: "online" | "local";
+  connectedPlayers: OnlinePlayer[];
+  playerName: string;
 }
 
 export const Cell: React.FC<CellProps> = ({
@@ -22,8 +25,13 @@ export const Cell: React.FC<CellProps> = ({
   currentPlayer,
   isGameActive,
   winningPositions,
+  mode,
+  connectedPlayers,
+  playerName,
 }) => {
   const [timeLeft, setTimeLeft] = useState<number>(20);
+
+  const me = connectedPlayers.find((p) => p.name === playerName);
 
   const isWinningCell = winningPositions?.some(
     (pos) => pos.x === x && pos.y === y
@@ -92,13 +100,15 @@ export const Cell: React.FC<CellProps> = ({
           <motion.div
             className={`
               text-lg sm:text-xl md:text-2xl font-bold select-none opacity-30
-              ${currentPlayer === "X" ? "text-game-blue" : "text-game-red"}
+              ${mode === "online" ? me?.symbol === "X" ? "text-game-red" : "text-game-blue" : currentPlayer === "X" ? "text-game-red" : "text-game-blue"}
             `}
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             exit={{ scale: 0 }}
           >
-            {currentPlayer === "X" ? "×" : "○"}
+            {mode === "online" ? me?.symbol : (
+              <>{currentPlayer === "X" ? "X" : "O"}</>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
