@@ -36,11 +36,11 @@ export function startGlobalMoveCleanup(io: SocketIOServer) {
 export function handleSocketConnection(socket: Socket, io: SocketIOServer) {
   const { userId } = socket.handshake.query as { userId: string };
   if (!userId) {
-    console.warn(`Socket ${socket.id} connected without userId`);
+    // console.warn(`Socket ${socket.id} connected without userId`);
     socket.disconnect(true);
     return;
   }
-  console.log(`Client connected: ${userId}`);
+  // console.log(`Client connected: ${userId}`);
   // Store mapping on initial connection
   socketToUserId.set(socket.id, userId);
 
@@ -144,14 +144,11 @@ export function handleSocketConnection(socket: Socket, io: SocketIOServer) {
       const winnerResult = checkWinner(room.board, move.position);
       if (winnerResult) {
         const { player: winnerPlayer, winningPositions } = winnerResult;
-        console.log("Winner symbol:", winnerPlayer);
-        console.log("Scores before:", room.scores);
 
         room.scores[winnerPlayer]++;
         room.winner = winnerPlayer;
         room.winningPositions = winningPositions;
         room.isGameActive = false;
-        console.log("Scores after:", room.scores);
 
         // Broadcast win
         io.to(roomId).emit("game-state-update", {
@@ -226,7 +223,7 @@ export function handleSocketConnection(socket: Socket, io: SocketIOServer) {
       playerRooms.delete(userId);
       socket.leave(roomId);
 
-      console.log(`Player ${playerName} (${userId}) left room ${roomId}`);
+      // console.log(`Player ${playerName} (${userId}) left room ${roomId}`);
     } catch (error) {
       console.error("Error leaving room:", error);
       socket.emit("error", { message: "Failed to leave room" });
@@ -235,7 +232,7 @@ export function handleSocketConnection(socket: Socket, io: SocketIOServer) {
 
   // Handle disconnect
   socket.on("disconnect", () => {
-    console.log(`Client disconnected: ${userId}`);
+    // console.log(`Client disconnected: ${userId}`);
     if (!userId) return;
     setTimeout(() => {
       // Only remove if they haven't reconnected by now

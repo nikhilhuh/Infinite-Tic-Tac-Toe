@@ -14,7 +14,7 @@ export function createServer() {
   const io = new SocketIOServer(httpServer, {
     cors: {
       origin: process.env.FRONTEND_URL || "http://localhost:3000",
-      methods: ["GET", "POST"],
+      methods: ["POST"],
       credentials: true,
     },
   });
@@ -23,7 +23,7 @@ export function createServer() {
   app.use(
     cors({
       origin: process.env.FRONTEND_URL || "http://localhost:3000",
-      methods: ["GET", "POST"],
+      methods: ["POST"],
     })
   );
   app.use(express.json());
