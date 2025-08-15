@@ -53,7 +53,7 @@ export const Cell: React.FC<CellProps> = ({
   return (
     <motion.div
       className={`
-    w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:h-15 lg:w-15 border border-game-grid/30 flex items-center justify-center cursor-pointer
+    w-10 h-10 md:w-12 md:h-12 border border-game-grid/30 flex items-center justify-center cursor-pointer
     relative transition-colors duration-200
     ${isWinningCell ? "bg-green-200" : ""}
     ${

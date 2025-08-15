@@ -204,7 +204,7 @@ export default function ScoreBoard({
                     {player.name} {player.name === playerName && "(You)"}
                   </span>
                 </div>
-                <span className={`text-xs font-bold sm:text-sm ${player.symbol === "X" ? "text-red-500" : "text-blue-500"}`}>
+                <span className={`text-xs font-bold sm:text-sm ${player.symbol === "X" ? "text-game-red" : "text-game-blue"}`}>
                   {player.symbol}
                 </span>
               </div>

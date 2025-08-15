@@ -25,7 +25,7 @@ export default function InfiniteBoard({
   const [hoveredCell, setHoveredCell] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const gridSize = 25; // Visible grid size
+  const gridSize = 20; // Visible grid size
   const centerOffset = Math.floor(gridSize / 2);
 
   const handleCellClick = (x: number, y: number) => {
@@ -65,7 +65,7 @@ export default function InfiniteBoard({
 
       <div
         ref={containerRef}
-        className={`relative overflow-hidden bg-game-bg/50 rounded-lg w-full min-h-[300px] ${mode === "online" && connectedPlayers && connectedPlayers.length < 2 ? "h-[50vh] max-h-[55vh]" : "h-[50vh] md:h-[60vh] lg:h-[65vh] max-h-[65vh]"} `}
+        className={`relative overflow-hidden bg-game-bg/50 rounded-lg w-full min-h-[300px] ${mode === "online" && connectedPlayers && connectedPlayers.length < 2 ? "h-[50vh] max-h-[50vh]" : "h-[50vh] max-h-[50vh] md:h-[60vh] md:max-h-[60vh] lg:h-[65vh] lg:max-h-[65vh]"} `}
       >
         <div className="absolute inset-0">
           {Array.from({ length: gridSize }, (_, row) => (
