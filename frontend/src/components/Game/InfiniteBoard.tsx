@@ -12,6 +12,9 @@ interface InfiniteBoardProps {
   mode: "online" | "local";
   connectedPlayers: OnlinePlayer[];
   playerName: string;
+  currentRoomId: string | null;
+  lastReaction: { emoji: string } | null;
+  sendReaction: (roomId: string, playerName: string, emoji: string) => void;
 }
 
 const gridCols = 15;
@@ -26,6 +29,9 @@ export default function InfiniteBoard({
   mode,
   connectedPlayers,
   playerName,
+  currentRoomId,
+  lastReaction,
+  sendReaction,
 }: InfiniteBoardProps) {
   const [hoveredCell, setHoveredCell] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -45,7 +51,7 @@ export default function InfiniteBoard({
 
   return (
     <motion.div
-      className="bg-background/80 backdrop-blur-sm rounded-lg border border-border p-2 md:p-4"
+      className="bg-background/80 backdrop-blur-sm rounded-lg border border-border p-2 md:p-4 relative"
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5 }}
@@ -68,7 +74,7 @@ export default function InfiniteBoard({
       {/* Board */}
       <div
         ref={containerRef}
-        className={`relative overflow-hidden bg-game-bg/50 rounded-lg w-full h-[60vh] lg:h-[70vh]`}
+        className={`relative overflow-hidden bg-game-bg/50 rounded-sm w-full h-[60vh] lg:h-[70vh]`}
       >
         <div
           className="absolute inset-0 grid"
@@ -110,6 +116,34 @@ export default function InfiniteBoard({
           })}
         </div>
       </div>
+      {mode === "online" && currentRoomId && (
+        <div className="flex justify-center gap-3 my-2">
+          {["👏", "😂", "😮", "😢", "😡", "🎉"].map((emoji) => (
+            <motion.button
+              key={emoji}
+              whileTap={{ scale: 0.8 }}
+              onClick={() => {
+                sendReaction(currentRoomId, playerName, emoji);
+              }}
+              className="text-sm sm:text-xl"
+            >
+              {emoji}
+            </motion.button>
+          ))}
+        </div>
+      )}
+      {lastReaction && (
+        <motion.div
+          key={lastReaction.emoji}
+          initial={{ opacity: 0, y: 30, scale: 0.5 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.4 }}
+          className="absolute top-10 right-5 text-2xl sm:text-3xl lg:text-4xl z-50 text-center"
+        >
+          {lastReaction.emoji}
+        </motion.div>
+      )}
     </motion.div>
   );
 }

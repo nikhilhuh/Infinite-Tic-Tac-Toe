@@ -247,6 +247,29 @@ export function handleSocketConnection(_socket: Socket, io: SocketIOServer) {
     }
   });
 
+  // === SEND REACTION ===
+  socket.on(
+    "send-reaction",
+    ({ roomId, playerName, emoji }: { roomId: string; playerName: string; emoji: string }) => {
+      try {
+        const room = rooms.get(roomId);
+        if (!room) return socket.emit("error", { message: "Room not found" });
+
+        const player = room.players.find((p: any) => p.name === playerName);
+        if (!player)
+          return socket.emit("error", { message: "Player not in room" });
+
+        // Broadcast to everyone in the room
+        io.to(roomId).emit("reaction", {
+          emoji,
+        });
+      } catch (err) {
+        console.error("Error sending reaction:", err);
+        socket.emit("error", { message: "Failed to send reaction" });
+      }
+    }
+  );
+
   // === DISCONNECT (browser close/refresh) ===
   socket.on("disconnect", () => {
     const userId = socket.data.userId;

@@ -12,6 +12,8 @@ interface UseSocketReturn {
   makeMove: (roomId: string, x: number, y: number) => void;
   gameState: GameState | null;
   error: string | null;
+  lastReaction: { emoji: string } | null;
+  sendReaction: (roomId: string, playerName: string, emoji: string) => void;
 }
 
 export function useSocket(): UseSocketReturn {
@@ -32,6 +34,9 @@ export function useSocket(): UseSocketReturn {
   });
 
   const [error, setError] = useState<string | null>(null);
+  const [lastReaction, setLastReaction] = useState<{
+    emoji: string;
+  } | null>(null);
 
   useEffect(() => {
     // Handle connect/disconnect
@@ -85,7 +90,15 @@ export function useSocket(): UseSocketReturn {
     socket.on("error", ({ message }) => {
       setError(message);
       setTimeout(() => {
-        setError(null)
+        setError(null);
+      }, 2000);
+    });
+
+    // Listen for incoming reactions
+    socket.on("reaction", ({ emoji }) => {
+      setLastReaction({ emoji });
+      setTimeout(() => {
+        setLastReaction(null);
       }, 2000);
     });
 
@@ -96,6 +109,7 @@ export function useSocket(): UseSocketReturn {
       socket.off("player-left");
       socket.off("game-state-update");
       socket.off("error");
+      socket.off("reaction");
     };
   }, []);
 
@@ -113,7 +127,7 @@ export function useSocket(): UseSocketReturn {
     if (!player) {
       setError("You are not in the game.");
       setTimeout(() => {
-        setError(null)
+        setError(null);
       }, 2000);
       return;
     }
@@ -122,7 +136,7 @@ export function useSocket(): UseSocketReturn {
     if (gameState.currentPlayer !== player.symbol) {
       setError("Not your turn.");
       setTimeout(() => {
-        setError(null)
+        setError(null);
       }, 2000);
       return;
     }
@@ -138,6 +152,11 @@ export function useSocket(): UseSocketReturn {
     socket.emit("make-move", { roomId, move, userId });
   };
 
+  // reaction
+  const sendReaction = (roomId: string, playerName: string, emoji: string) => {
+    socket.emit("send-reaction", { roomId, playerName, emoji });
+  };
+
   return {
     socket,
     connectedPlayers,
@@ -145,5 +164,7 @@ export function useSocket(): UseSocketReturn {
     makeMove,
     gameState,
     error,
+    lastReaction,
+    sendReaction,
   };
 }
