@@ -7,6 +7,7 @@ import Header from "@/components/Game/Header";
 import Invalid from "@/components/Game/Invalid";
 import { makeMoveFunction } from "@/utils/makeMove";
 import { useSocketContext } from "@/context/SocketContext";
+import { AnimatePresence, motion } from "framer-motion";
 
 export default function Game() {
   const [searchParams] = useSearchParams();
@@ -54,9 +55,8 @@ export default function Game() {
       const stillOnGamePage = window.location.pathname.includes("/game");
       if (!stillOnGamePage) {
         socket.emit("leaveRoom", { roomId: currentRoomId, playerName });
-        sessionStorage.removeItem("roomId");
         hasRoom.current = false;
-        sessionStorage.removeItem(`${mode}-scores`);
+        sessionStorage.clear();
       }
     };
   }, [mode, currentRoomId, playerName, joinRoom, socket]);
@@ -97,6 +97,23 @@ export default function Game() {
   return (
     <div className="min-h-screen bg-game-bg">
       <Header mode={mode} currentRoomId={currentRoomId} />
+      {/* ✅ Animated Error Dialog */}
+      <AnimatePresence>
+        {error && (
+          <motion.div
+            key="error-box"
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.8, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 flex items-center justify-center z-50"
+          >
+            <div className="bg-red-500 text-white text-sm px-4 py-2 rounded-xl shadow-lg">
+              {error}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <div className="max-w-7xl mx-auto p-2 lg:p-4">
         <MobileLayout
@@ -106,7 +123,6 @@ export default function Game() {
           connectedPlayers={connectedPlayers}
           currentRoomId={currentRoomId}
           makeMove={makeMove}
-          error={error}
         />
 
         <DesktopLayout
@@ -116,7 +132,6 @@ export default function Game() {
           connectedPlayers={connectedPlayers}
           currentRoomId={currentRoomId}
           makeMove={makeMove}
-          error={error}
         />
       </div>
     </div>

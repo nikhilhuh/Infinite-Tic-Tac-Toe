@@ -12,7 +12,6 @@ interface DesktopLayoutProps {
   connectedPlayers: OnlinePlayer[];
   currentRoomId: string | null;
   makeMove: (x: number, y: number) => void;
-  error: string | null;
 }
 
 const DesktopLayout: React.FC<DesktopLayoutProps> = ({
@@ -22,7 +21,6 @@ const DesktopLayout: React.FC<DesktopLayoutProps> = ({
   connectedPlayers,
   currentRoomId,
   makeMove,
-  error,
 }) => {
   const [copied, setCopied] = React.useState<boolean>(false);
 
@@ -40,9 +38,6 @@ const DesktopLayout: React.FC<DesktopLayoutProps> = ({
       </div>
 
       <div className="lg:col-span-3 space-y-4">
-        {error && (
-          <p className="text-red-400 text-center text-sm p-2">{error}</p>
-        )}
         {mode === "online" && currentRoomId && connectedPlayers.length < 2 && (
           <motion.div
             className="bg-game-blue/10 border border-game-blue/30 rounded-lg p-4"

@@ -15,8 +15,22 @@ interface UseSocketReturn {
 }
 
 export function useSocket(): UseSocketReturn {
-  const [connectedPlayers, setConnectedPlayers] = useState<OnlinePlayer[]>([]);
-  const [gameState, setGameState] = useState<GameState | null>(null);
+  const [connectedPlayers, setConnectedPlayers] = useState<OnlinePlayer[]>(
+    () => {
+      const saved = sessionStorage.getItem("connectedPlayers");
+      return saved ? JSON.parse(saved) : [];
+    }
+  );
+
+  const [gameState, setGameState] = useState<GameState>(() => {
+    const saved = sessionStorage.getItem("gameState");
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      return parsed;
+    }
+    return null;
+  });
+
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -33,6 +47,7 @@ export function useSocket(): UseSocketReturn {
     socket.on("room-joined", ({ players, serverGameState }) => {
       setError(null);
       setConnectedPlayers(players);
+      sessionStorage.setItem("connectedPlayers", JSON.stringify(players));
       if (serverGameState) {
         const boardMap = new Map<string, Move>();
         serverGameState.board.forEach(([key, move]: [string, Move]) => {
@@ -43,6 +58,7 @@ export function useSocket(): UseSocketReturn {
           ...serverGameState,
           board: boardMap,
         });
+        sessionStorage.setItem("gameState", JSON.stringify(gameState));
       }
     });
 
@@ -68,6 +84,9 @@ export function useSocket(): UseSocketReturn {
     // Error handling
     socket.on("error", ({ message }) => {
       setError(message);
+      setTimeout(() => {
+        setError(null)
+      }, 2000);
     });
 
     return () => {
@@ -93,12 +112,18 @@ export function useSocket(): UseSocketReturn {
     const player = connectedPlayers.find((p) => p.id === userId);
     if (!player) {
       setError("You are not in the game.");
+      setTimeout(() => {
+        setError(null)
+      }, 2000);
       return;
     }
 
     // Check turn
     if (gameState.currentPlayer !== player.symbol) {
       setError("Not your turn.");
+      setTimeout(() => {
+        setError(null)
+      }, 2000);
       return;
     }
 

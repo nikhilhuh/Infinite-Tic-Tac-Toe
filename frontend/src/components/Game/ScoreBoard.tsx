@@ -217,7 +217,7 @@ export default function ScoreBoard({
                 </div>
                 <span
                   className={`text-xs font-bold sm:text-sm ${
-                    player.symbol === "X" ? "text-game-red" : "text-game-blue"
+                    player.symbol === "X" ? "text-game-blue" : "text-game-red"
                   }`}
                 >
                   {player.symbol}

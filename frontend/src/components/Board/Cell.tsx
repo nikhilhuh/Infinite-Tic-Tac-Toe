@@ -91,7 +91,7 @@ export const Cell: React.FC<CellProps> = ({
             exit={{ scale: 0, rotate: 180 }}
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
           >
-            {move.player === "X" ? "×" : "○"}
+            {move.player === "X" ? "X" : "O"}
           </motion.div>
         )}
 
@@ -100,7 +100,7 @@ export const Cell: React.FC<CellProps> = ({
           <motion.div
             className={`
               text-lg sm:text-xl md:text-2xl font-bold select-none opacity-30
-              ${mode === "online" ? me?.symbol === "X" ? "text-game-red" : "text-game-blue" : currentPlayer === "X" ? "text-game-red" : "text-game-blue"}
+              ${mode === "online" ? me?.symbol === "X" ? "text-game-blue" : "text-game-red" : currentPlayer === "X" ? "text-game-blue" : "text-game-red"}
             `}
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}

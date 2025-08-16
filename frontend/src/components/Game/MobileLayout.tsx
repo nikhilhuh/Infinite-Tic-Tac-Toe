@@ -12,7 +12,6 @@ interface MobileLayoutProps {
   connectedPlayers: OnlinePlayer[];
   currentRoomId: string | null;
   makeMove: (x: number, y: number) => void;
-  error: string | null;
 }
 
 const MobileLayout: React.FC<MobileLayoutProps> = ({
@@ -22,13 +21,11 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
   connectedPlayers,
   currentRoomId,
   makeMove,
-  error
 }) => {
   const [copied, setCopied] = React.useState<boolean>(false);
 
   return (
     <div className="lg:hidden space-y-4">
-      {error && <p className="text-red-400 text-center text-xs p-2">{error}</p>}
       {mode === "online" && currentRoomId && connectedPlayers.length < 2 && (
         <motion.div
           className={`bg-game-blue/10 border border-game-blue/30 rounded-lg p-2 ${
@@ -39,7 +36,9 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
           transition={{ duration: 0.5 }}
         >
           <div className="text-center">
-            <h3 className="font-semibold text-game-blue mb-2 text-sm">Room Created!</h3>
+            <h3 className="font-semibold text-game-blue mb-2 text-sm">
+              Room Created!
+            </h3>
             <p className="text-xs text-muted-foreground mb-2">
               Share this ID with friends:
             </p>
@@ -49,17 +48,17 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({
             <Button
               size="sm"
               variant="outline"
-              onClick={() => 
-                navigator.clipboard.writeText(currentRoomId || "").then(()=> {
-                      setCopied(true);
-                      setTimeout(() => {
-                        setCopied(false);
-                      }, 2000);
-                    })
+              onClick={() =>
+                navigator.clipboard.writeText(currentRoomId || "").then(() => {
+                  setCopied(true);
+                  setTimeout(() => {
+                    setCopied(false);
+                  }, 2000);
+                })
               }
               className="text-xs"
             >
-              {copied? "✅Copied" : "Copy Room Id"}
+              {copied ? "✅Copied" : "Copy Room Id"}
             </Button>
           </div>
         </motion.div>
