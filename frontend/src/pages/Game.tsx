@@ -42,8 +42,8 @@ export default function Game() {
   } = useSocketContext();
 
   useEffect(() => {
-    window.scrollTo(0,0);
-    
+    window.scrollTo(0, 0);
+
     if (mode === "online" && currentRoomId && playerName && !hasRoom.current) {
       joinRoom(currentRoomId, playerName);
       hasRoom.current = true;
@@ -60,6 +60,15 @@ export default function Game() {
       }
     };
   }, [mode, currentRoomId, playerName, joinRoom, socket]);
+
+  useEffect(() => {
+    const handleUnload = () => {
+      socket.disconnect(); 
+    };
+
+    window.addEventListener("beforeunload", handleUnload);
+    return () => window.removeEventListener("beforeunload", handleUnload);
+  }, [socket]);
 
   // ✅ Sync onlineGameState into local state when in online mode
   useEffect(() => {
