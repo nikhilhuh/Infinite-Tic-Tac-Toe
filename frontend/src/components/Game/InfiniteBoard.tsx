@@ -9,7 +9,7 @@ interface InfiniteBoardProps {
   currentPlayer: Player;
   isGameActive: boolean;
   winningPositions: Position[] | null;
-  mode: "online" | "local";
+  mode: "online" | "local" | "ai";
   connectedPlayers: OnlinePlayer[];
   playerName: string;
   currentRoomId: string | null;
@@ -66,7 +66,7 @@ export default function InfiniteBoard({
               currentPlayer === "X" ? "text-game-blue" : "text-game-red"
             }
           >
-            {currentPlayer === "X" ? "× Player" : "○ Player"}
+            {currentPlayer === "X" ? "X Player" : "O Player"}
           </span>
         </div>
       </div>

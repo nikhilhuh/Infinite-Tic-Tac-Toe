@@ -21,7 +21,7 @@ const AnimatedBackground: React.FC = () => {
   ];
 
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+    <div className="absolute inset-0 max-h-screen overflow-hidden pointer-events-none">
       {/* Floating symbols - more dynamic */}
       {symbols.map((symbol, i) => (
         <motion.div

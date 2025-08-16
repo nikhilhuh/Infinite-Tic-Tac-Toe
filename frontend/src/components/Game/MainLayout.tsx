@@ -7,7 +7,7 @@ import ScoreBoard from "./ScoreBoard";
 
 interface MainLayoutProps {
   gameState: GameState;
-  mode: "local" | "online";
+  mode: "local" | "online" | "ai";
   playerName: string;
   connectedPlayers: OnlinePlayer[];
   currentRoomId: string | null;

@@ -5,16 +5,18 @@ import { useNavigate } from "react-router-dom";
 
 interface ActionButtonsProps {
   setShowOnlineModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowAIModal: React.Dispatch<React.SetStateAction<boolean>>; 
 }
 
 const ActionButtons: React.FC<ActionButtonsProps> = ({
   setShowOnlineModal,
+  setShowAIModal,
 }) => {
   const navigate = useNavigate();
 
   return (
     <motion.div
-      className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4 w-full max-w-lg mx-auto"
+      className="flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:gap-4 justify-center px-4 w-full mx-auto"
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 1, duration: 0.8 }}
@@ -36,6 +38,16 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
       >
         <span className="mr-2 text-lg sm:text-2xl">🌐</span>
         Play Online with Friends
+      </Button>
+
+      <Button
+        size="lg"
+        variant="outline"
+        onClick={() => setShowAIModal(true)} 
+        className="border-green-600 text-green-600 hover:bg-green-600 hover:text-white text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 h-auto w-full sm:w-auto"
+      >
+        <span className="mr-2 text-lg sm:text-2xl">🤖</span>
+        Play With AI
       </Button>
     </motion.div>
   );

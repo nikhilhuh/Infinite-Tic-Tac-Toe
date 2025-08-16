@@ -1,17 +1,19 @@
 import { GameState, Move } from "@/types/game";
 import { checkWinner } from "./checkWinner";
+import { getAIMove } from "./aiMove";
 
 // Store all active timeouts globally (per position)
 const moveTimeouts = new Map<string, NodeJS.Timeout>();
 
 export const makeMoveFunction = (
-  mode: "online" | "local",
+  mode: "online" | "local" | "ai",
   currentRoomId: string | null,
   gameState: GameState,
   setGameState: React.Dispatch<React.SetStateAction<GameState>>,
   x: number,
   y: number,
-  makeOnlineMove: (roomId: string, x: number, y: number) => void
+  makeOnlineMove: (roomId: string, x: number, y: number) => void,
+  difficulty: "easy" | "medium" | "hard"
 ) => {
   if (!gameState.isGameActive) return;
   const position = `${x},${y}`;
@@ -27,7 +29,6 @@ export const makeMoveFunction = (
     timestamp: Date.now(),
     position: { x, y },
   };
-
   const newBoard = new Map(gameState.board);
   newBoard.set(position, move);
 
@@ -37,10 +38,10 @@ export const makeMoveFunction = (
     const { player, winningPositions } = result;
 
     // ❌ Cancel ALL move deletion timeouts if winner is found
-    for (const [pos, timeoutId] of moveTimeouts.entries()) {
+    for (const [, timeoutId] of moveTimeouts.entries()) {
       clearTimeout(timeoutId);
-      moveTimeouts.delete(pos);
     }
+    moveTimeouts.clear();
 
     setGameState((prev) => ({
       ...prev,
@@ -51,7 +52,7 @@ export const makeMoveFunction = (
       isGameActive: false,
     }));
 
-    // 🕒 Set timeout to reset the game
+    // 🕒 Reset game after 5s
     setTimeout(() => {
       setGameState((prev) => ({
         ...prev,
@@ -62,24 +63,49 @@ export const makeMoveFunction = (
         winningPositions: null,
       }));
     }, 5000);
-  } else {
-    setGameState((prev) => ({
-      ...prev,
-      board: newBoard,
-      currentPlayer: prev.currentPlayer === "X" ? "O" : "X",
-    }));
+    return; // stop here if game ended
+  }
 
-    // 🕒 Set timeout to remove this move
-    const timeoutId = setTimeout(() => {
-      setGameState((prev) => {
-        const updatedBoard = new Map(prev.board);
-        updatedBoard.delete(position);
-        return { ...prev, board: updatedBoard };
-      });
+  // ✅ Apply human (or AI) move
+  setGameState((prev) => ({
+    ...prev,
+    board: newBoard,
+    currentPlayer: prev.currentPlayer === "X" ? "O" : "X",
+  }));
 
-      moveTimeouts.delete(position); // Clean up after firing
-    }, 20000);
+  // 🕒 Schedule removal of this move
+  const timeoutId = setTimeout(() => {
+    setGameState((prev) => {
+      const updatedBoard = new Map(prev.board);
+      updatedBoard.delete(position);
+      return { ...prev, board: updatedBoard };
+    });
+    moveTimeouts.delete(position);
+  }, 20000);
+  moveTimeouts.set(position, timeoutId);
 
-    moveTimeouts.set(position, timeoutId); // Save timeout for potential clearing
+  // ✅ If playing against AI, trigger it AFTER the human finishes their move
+  if (mode === "ai" && difficulty && move.player === "X") {
+    setGameState((prev) => {
+      if (!prev.isGameActive || prev.currentPlayer !== "O") return prev;
+
+      const aiMove = getAIMove(prev.board, difficulty, move.position);
+      if (!aiMove) return prev;
+
+      const [aiX, aiY] = aiMove;
+
+      makeMoveFunction(
+        "ai",
+        null,
+        prev,
+        setGameState,
+        aiX,
+        aiY,
+        makeOnlineMove,
+        difficulty
+      );
+
+      return prev;
+    });
   }
 };

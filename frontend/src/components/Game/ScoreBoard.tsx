@@ -14,7 +14,7 @@ interface ScoreBoardProps {
   scores: { X: number; O: number };
   currentPlayer: Player;
   winner: Player | null;
-  mode: "local" | "online";
+  mode: "local" | "online" | "ai";
   playerName: string;
   connectedPlayers: OnlinePlayer[];
 }
@@ -98,6 +98,10 @@ export default function ScoreBoard({
                           ? "Your turn"
                           : "Opponent's turn";
                       })()
+                    : mode === "ai"
+                    ? currentPlayer === "X"
+                      ? "Your turn"
+                      : "AI's turn"
                     : "Your turn"}
                 </div>
               </div>
@@ -116,13 +120,13 @@ export default function ScoreBoard({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="w-5 h-5 sm:w-6 sm:h-6 rounded bg-game-blue/20 text-game-blue flex items-center justify-center text-xs sm:text-sm font-bold">
-                ×
+                X
               </div>
               <span className="font-medium text-sm sm:text-base">X Player</span>
             </div>
             <motion.div
               className="text-lg sm:text-xl font-bold text-game-blue"
-              key={`x-${scores.X}`}
+              key={`X-${scores.X}`}
               initial={{ scale: 1.5 }}
               animate={{ scale: 1 }}
               transition={{ duration: 0.3 }}
@@ -134,13 +138,13 @@ export default function ScoreBoard({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="w-5 h-5 sm:w-6 sm:h-6 rounded bg-game-red/20 text-game-red flex items-center justify-center text-xs sm:text-sm font-bold">
-                ○
+                O
               </div>
               <span className="font-medium text-sm sm:text-base">O Player</span>
             </div>
             <motion.div
               className="text-lg sm:text-xl font-bold text-game-red"
-              key={`o-${scores.O}`}
+              key={`O-${scores.O}`}
               initial={{ scale: 1.5 }}
               animate={{ scale: 1 }}
               transition={{ duration: 0.3 }}

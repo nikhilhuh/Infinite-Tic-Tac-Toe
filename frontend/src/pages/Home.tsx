@@ -4,29 +4,17 @@ import AnimatedBackground from "@/components/Home/AnimatedBackgroud";
 import ActionButtons from "@/components/Home/ActionButtons";
 import Features from "@/components/Home/Features";
 import { OnlineModal } from "@/components/Home/OnlineModal";
+import { AIModal } from "@/components/Home/AIModal";
 
 export default function Home() {
   const [showOnlineModal, setShowOnlineModal] = useState<boolean>(false);
+  const [showAIModal, setShowAIModal] = useState<boolean>(false);
 
   return (
-    <div className="min-h-screen bg-game-bg relative overflow-hidden">
-      {/* Subtle background pulse */}
-      <motion.div
-        className="absolute inset-0 bg-gradient-radial from-primary/5 via-transparent to-transparent"
-        animate={{
-          scale: [1, 1.1, 1],
-          opacity: [0.3, 0.1, 0.3],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
-
+    <div className="min-h-screen bg-game-bg relative overflow-x-hidden">
       <AnimatedBackground />
 
-      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4">
+      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen p-4">
         <motion.div
           className="text-center max-w-4xl mx-auto relative z-10"
           initial={{ opacity: 0, y: 50 }}
@@ -60,7 +48,10 @@ export default function Home() {
           <Features />
 
           {/* Action buttons */}
-          <ActionButtons setShowOnlineModal={setShowOnlineModal} />
+          <ActionButtons
+            setShowOnlineModal={setShowOnlineModal}
+            setShowAIModal={setShowAIModal}
+          />
         </motion.div>
       </div>
 
@@ -68,6 +59,7 @@ export default function Home() {
         isOpen={showOnlineModal}
         onClose={() => setShowOnlineModal(false)}
       />
+      <AIModal isOpen={showAIModal} onClose={() => setShowAIModal(false)} />
     </div>
   );
 }

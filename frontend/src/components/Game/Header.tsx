@@ -5,13 +5,15 @@ import { Button } from "../ui/button";
 import { useNavigate } from "react-router-dom";
 
 interface HeaderProps {
-  mode: "local" | "online";
+  mode: "local" | "online" | "ai";
   currentRoomId: string | null;
+  difficulty: "easy" | "medium" | "hard" | null;
 }
 
 const Header: React.FC<HeaderProps> = ({
   mode,
   currentRoomId,
+  difficulty,
 }) => {
   const navigate = useNavigate();
   return (
@@ -32,12 +34,12 @@ const Header: React.FC<HeaderProps> = ({
             <ArrowLeft className="w-4 h-4 mr-2" />
             Home
           </Button>
-          <div className="text-sm text-muted-foreground">
+          <div className="text-sm text-muted-foreground capitalize">
             {mode === "local"
               ? "Local Game"
-              : currentRoomId
+              : mode === "online" ? currentRoomId
               ? `Room: ${currentRoomId}`
-              : "Connecting..."}
+              : "Connecting..." : `AI- ${difficulty}`}
           </div>
         </div>
         <div className="text-center">

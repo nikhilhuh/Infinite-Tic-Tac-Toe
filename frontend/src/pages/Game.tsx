@@ -8,9 +8,41 @@ import { useSocketContext } from "@/context/SocketContext";
 import { AnimatePresence, motion } from "framer-motion";
 import MainLayout from "@/components/Game/MainLayout";
 
+const demoGameState: GameState = {
+  board: new Map(),
+  currentPlayer: "X",
+  scores: { X: 0, O: 0 },
+  isGameActive: true,
+  winner: null,
+  winningPositions: null,
+};
+
+// Helpers to save/restore Map safely
+function saveGameState(mode: string, gameState: GameState) {
+  const serializable = {
+    ...gameState,
+    board: Object.fromEntries(gameState.board),
+  };
+  sessionStorage.setItem(`${mode}-state`, JSON.stringify(serializable));
+}
+
+function loadGameState(mode: string): GameState {
+  const data = sessionStorage.getItem(`${mode}-state`);
+  if (!data) return demoGameState;
+  const parsed = JSON.parse(data);
+  return {
+    ...parsed,
+    board: new Map(Object.entries(parsed.board)),
+  };
+}
+
 export default function Game() {
   const [searchParams] = useSearchParams();
-  const mode = searchParams.get("mode") as "local" | "online";
+  const mode = searchParams.get("mode") as "local" | "online" | "ai";
+  const difficulty = searchParams.get("difficulty") as
+    | "easy"
+    | "medium"
+    | "hard";
   const playerName = searchParams.get("name") || "Player";
   const roomId = searchParams.get("room");
   const [currentRoomId] = useState<string | null>(() => {
@@ -18,19 +50,9 @@ export default function Game() {
     return saved || roomId;
   });
   const hasRoom = useRef(false);
-
-  const scores = JSON.parse(
-    sessionStorage.getItem(`${mode}-scores`) || JSON.stringify({ X: 0, O: 0 })
+  const [gameState, setGameState] = useState<GameState>(() =>
+    loadGameState(mode)
   );
-
-  const [gameState, setGameState] = useState<GameState>({
-    board: new Map(),
-    currentPlayer: "X",
-    scores: scores,
-    isGameActive: true,
-    winner: null,
-    winningPositions: null,
-  });
 
   const {
     socket,
@@ -62,7 +84,7 @@ export default function Game() {
     };
   }, [mode, currentRoomId, playerName, joinRoom, socket]);
 
-  // ✅ Sync onlineGameState into local state when in online mode
+  // ✅ Sync onlineGameState
   useEffect(() => {
     if (mode === "online" && onlineGameState) {
       setGameState(onlineGameState);
@@ -77,19 +99,17 @@ export default function Game() {
       setGameState,
       x,
       y,
-      makeOnlineMove
+      makeOnlineMove,
+      difficulty
     );
   }
 
-  // Save scores only in local mode
+  // Save scores only in local and ai mode
   useEffect(() => {
-    if (mode === "local") {
-      sessionStorage.setItem(
-        `${mode}-scores`,
-        JSON.stringify(gameState.scores)
-      );
+    if (mode === "local" || mode === "ai") {
+      saveGameState(mode, gameState);
     }
-  }, [gameState.scores, mode]);
+  }, [gameState, mode]);
 
   if (mode === "online" && !roomId) {
     return <Invalid />;
@@ -97,7 +117,11 @@ export default function Game() {
 
   return (
     <div className="min-h-screen bg-game-bg">
-      <Header mode={mode} currentRoomId={currentRoomId} />
+      <Header
+        mode={mode}
+        currentRoomId={currentRoomId}
+        difficulty={difficulty}
+      />
       {/* ✅ Animated Error Dialog */}
       <AnimatePresence>
         {error && (
@@ -115,7 +139,7 @@ export default function Game() {
           </motion.div>
         )}
       </AnimatePresence>
-    
+
       <div className="max-w-7xl mx-auto p-2 lg:p-4">
         <MainLayout
           gameState={gameState}

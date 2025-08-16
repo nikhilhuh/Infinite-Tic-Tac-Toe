@@ -11,7 +11,7 @@ interface CellProps {
   currentPlayer: Player;
   isGameActive: boolean;
   winningPositions: Position[] | null;
-  mode: "online" | "local";
+  mode: "online" | "local" | "ai";
   connectedPlayers: OnlinePlayer[];
   playerName: string;
 }
@@ -100,13 +100,27 @@ export const Cell: React.FC<CellProps> = ({
           <motion.div
             className={`
               text-lg sm:text-xl md:text-2xl font-bold select-none opacity-30
-              ${mode === "online" ? me?.symbol === "X" ? "text-game-blue" : "text-game-red" : currentPlayer === "X" ? "text-game-blue" : "text-game-red"}
+              ${
+                mode === "online"
+                  ? me?.symbol === "X"
+                    ? "text-game-blue"
+                    : "text-game-red"
+                  : mode === "ai"
+                  ? "text-game-blue"
+                  : currentPlayer === "X"
+                  ? "text-game-blue"
+                  : "text-game-red"
+              }
             `}
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             exit={{ scale: 0 }}
           >
-            {mode === "online" ? me?.symbol : (
+            {mode === "online" ? (
+              me?.symbol
+            ) : mode === "ai" ? (
+              "X"
+            ) : (
               <>{currentPlayer === "X" ? "X" : "O"}</>
             )}
           </motion.div>
