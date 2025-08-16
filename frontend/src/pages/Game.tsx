@@ -61,15 +61,6 @@ export default function Game() {
     };
   }, [mode, currentRoomId, playerName, joinRoom, socket]);
 
-  useEffect(() => {
-    const handleUnload = () => {
-      socket.disconnect(); 
-    };
-
-    window.addEventListener("beforeunload", handleUnload);
-    return () => window.removeEventListener("beforeunload", handleUnload);
-  }, [socket]);
-
   // ✅ Sync onlineGameState into local state when in online mode
   useEffect(() => {
     if (mode === "online" && onlineGameState) {
