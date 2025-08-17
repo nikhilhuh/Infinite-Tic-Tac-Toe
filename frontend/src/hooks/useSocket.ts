@@ -12,7 +12,7 @@ interface UseSocketReturn {
   makeMove: (roomId: string, x: number, y: number) => void;
   gameState: GameState | null;
   error: string | null;
-  lastReaction: { emoji: string } | null;
+  reactions: { id: number; emoji: string }[];
   sendReaction: (roomId: string, playerName: string, emoji: string) => void;
 }
 
@@ -34,9 +34,9 @@ export function useSocket(): UseSocketReturn {
   });
 
   const [error, setError] = useState<string | null>(null);
-  const [lastReaction, setLastReaction] = useState<{
-    emoji: string;
-  } | null>(null);
+  const [reactions, setReactions] = useState<{ id: number; emoji: string }[]>(
+    []
+  );
 
   useEffect(() => {
     // Handle connect/disconnect
@@ -96,9 +96,12 @@ export function useSocket(): UseSocketReturn {
 
     // Listen for incoming reactions
     socket.on("reaction", ({ emoji }) => {
-      setLastReaction({ emoji });
+      const id = Date.now() + Math.random(); // unique id
+      setReactions((prev) => [...prev, { id, emoji }]);
+
+      // Remove after 2s (so it floats and then disappears)
       setTimeout(() => {
-        setLastReaction(null);
+        setReactions((prev) => prev.filter((r) => r.id !== id));
       }, 2000);
     });
 
@@ -164,7 +167,7 @@ export function useSocket(): UseSocketReturn {
     makeMove,
     gameState,
     error,
-    lastReaction,
+    reactions,
     sendReaction,
   };
 }

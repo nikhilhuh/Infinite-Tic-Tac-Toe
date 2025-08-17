@@ -12,7 +12,7 @@ interface MainLayoutProps {
   connectedPlayers: OnlinePlayer[];
   currentRoomId: string | null;
   makeMove: (x: number, y: number) => void;
-  lastReaction: { emoji: string } | null;
+  reactions: { id: number; emoji: string }[];
   sendReaction: (roomId: string, playerName: string, emoji: string) => void;
 }
 
@@ -23,7 +23,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
   connectedPlayers,
   currentRoomId,
   makeMove,
-  lastReaction,
+  reactions,
   sendReaction,
 }) => {
   const [copied, setCopied] = React.useState(false);
@@ -92,7 +92,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
           connectedPlayers={connectedPlayers}
           playerName={playerName}
           currentRoomId={currentRoomId}
-          lastReaction={lastReaction}
+          reactions={reactions}
           sendReaction={sendReaction}
         />
       </div>

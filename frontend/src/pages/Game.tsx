@@ -5,8 +5,8 @@ import Header from "@/components/Game/Header";
 import Invalid from "@/components/Game/Invalid";
 import { makeMoveFunction } from "@/utils/makeMove";
 import { useSocketContext } from "@/context/SocketContext";
-import { AnimatePresence, motion } from "framer-motion";
 import MainLayout from "@/components/Game/MainLayout";
+import { AnimatePresence, motion } from "framer-motion";
 
 const demoGameState: GameState = {
   board: new Map(),
@@ -61,7 +61,7 @@ export default function Game() {
     makeMove: makeOnlineMove,
     gameState: onlineGameState,
     error,
-    lastReaction,
+    reactions,
     sendReaction,
   } = useSocketContext();
 
@@ -122,25 +122,7 @@ export default function Game() {
         currentRoomId={currentRoomId}
         difficulty={difficulty}
       />
-      {/* ✅ Animated Error Dialog */}
-      <AnimatePresence>
-        {error && (
-          <motion.div
-            key="error-box"
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.8, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 flex items-center justify-center z-50"
-          >
-            <div className="bg-red-500 text-white text-sm px-4 py-2 rounded-xl shadow-lg">
-              {error}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <div className="max-w-7xl mx-auto p-2 lg:p-4">
+      <div className="max-w-7xl mx-auto p-2 lg:p-4 relative">
         <MainLayout
           gameState={gameState}
           mode={mode}
@@ -148,9 +130,26 @@ export default function Game() {
           connectedPlayers={connectedPlayers}
           currentRoomId={currentRoomId}
           makeMove={makeMove}
-          lastReaction={lastReaction}
+          reactions={reactions}
           sendReaction={sendReaction}
         />
+         {/* ✅ Animated Error Dialog */}
+      <AnimatePresence>
+        {error && (
+          <motion.div
+            key="error-box"
+            initial={{ opacity: 0, scale: 0.8, y: -20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.8, y: -20 }}
+            transition={{ duration: 0.5 }}
+            className="fixed inset-0 flex items-center justify-center z-50"
+          >
+            <div className="bg-red-500 text-white text-xs sm:text-sm px-4 py-2 rounded-xl shadow-lg">
+              {error}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       </div>
     </div>
   );
