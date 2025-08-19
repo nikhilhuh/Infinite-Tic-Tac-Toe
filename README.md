@@ -1,7 +1,7 @@
 # ♾️ Infinite Tic Tac Toe
 
 An **infinite-grid Tic Tac Toe** game built with **React + TypeScript** and powered by **Socket.IO** for real-time multiplayer.  
-Play **locally** with a friend on the same device or **online** with friends anywhere in the world!  
+Play **locally** with a friend on the same device or against an **AI** with three difficulty levels, or **online** with friend anywhere in the world!  
 
 ---
 
@@ -11,6 +11,7 @@ Play **locally** with a friend on the same device or **online** with friends any
 - 🎯 **5-in-a-Row to Win** — Extend your strategy beyond the classic 3x3 board.
 - 🔄 **Auto-Reset** — The game automatically resets after each round.
 - 🖥 **Local Play** — Challenge a friend on the same device.
+- 🤖 Play vs AI — Choose between Easy, Medium, or Hard difficulty.
 - 🌍 **Online Multiplayer** — Connect and play in real time with friends via the internet.
 - 🎨 Smooth animations with **Framer Motion** and modern UI icons via **Lucide**.
 
@@ -22,7 +23,6 @@ Play **locally** with a friend on the same device or **online** with friends any
 - [React 18](https://react.dev/)
 - [TypeScript](https://www.typescriptlang.org/)
 - [Socket.IO Client](https://socket.io/)
-- [@tanstack/react-query](https://tanstack.com/query/latest) for server state management
 - [Axios](https://axios-http.com/)
 - [Framer Motion](https://www.framer.com/motion/) for animations
 - [Lucide React](https://lucide.dev/) for icons
@@ -97,10 +97,17 @@ The backend will run at: http://localhost:3001
 
 ### Local Game
 
-1. Select Local Game from the menu.
+1. Select Play Locally from the menu.
 2. Player X and Player O take turns placing marks.
 3. Marks disappear after 20 seconds, so plan carefully.
 4. First to 5 in a row wins.
+
+
+### Play vs AI
+
+1. Select Play vs AI from the menu.
+2. Choose difficulty level: Easy, Medium, or Hard.
+3. Try to beat the computer while managing disappearing moves.
 
 ### Online Game
 
@@ -119,6 +126,21 @@ The backend will run at: http://localhost:3001
 ---
 
 💡 Tip: Don’t underestimate disappearing moves — your winning strategy might vanish before your eyes! 😉
+
+---
+
+## 🤝 Contributing
+
+This project is **open source** and contributions are welcome! 🎉  
+
+To contribute:  
+1. **Fork** the repository  
+2. **Create a new branch** (`git checkout -b feature-name`)  
+3. **Make your changes** and commit (`git commit -m "Added new feature"`)  
+4. **Push** your branch (`git push origin feature-name`)  
+5. Open a **Pull Request**  
+
+👉 Please read the [CONTRIBUTING.md](CONTRIBUTING.md) file for detailed guidelines before contributing.  
 
 ---
 
