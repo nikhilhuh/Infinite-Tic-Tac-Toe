@@ -3,7 +3,7 @@ import { isAxiosError } from "axios";
 export const apiErrorHandler = (err: any) => {
   if (isAxiosError(err)) {
     if (err.code === "ECONNABORTED") {
-      return { success: false, message: "Request Timed Out" };
+      return { success: false, message: "Server is not responding, wait before trying again" };
     } else if (err.response) {
       const { status, data } = err.response;
       const message = data?.message || "Something went wrong";
@@ -14,7 +14,7 @@ export const apiErrorHandler = (err: any) => {
         status,
       };
     } else if (err.request) {
-      return { success: false, message: "No response from server" };
+      return { success: false, message: "Server is not responding, wait before trying again" };
     }
   }
 
